@@ -257,46 +257,45 @@ router.put('/:customerID', (req, res) => {
     const customerID = req.params.customerID;
     const { name, email, phone, address, documents, mortgageDocuments, furnitureRequirements, businessDetails } = req.body;
 
-    // Begin transaction to update customer and related data
     db.beginTransaction(err => {
         if (err) return res.status(500).json({ message: 'Transaction start failed', error: err });
 
-        // Update Customer data
-        const updateCustomerQuery = 'UPDATE Customers SET name = ?, email = ?, phone = ? WHERE customerID = ?';
-        db.query(updateCustomerQuery, [name, email, phone, customerID], (err) => {
+        const customerQuery = `UPDATE Customers SET name = ?, email = ?, phone = ? WHERE customerID = ?`;
+        const addressQuery = `UPDATE Addresses SET street = ?, city = ?, state = ?, zip = ?, country = ? WHERE customerId = ?`;
+        const documentQuery = `UPDATE Documents SET type = ?, documentNumber = ?, issueDate = ?, expiryDate = ? WHERE customerId = ?`;
+        const mortgageQuery = `UPDATE MortgageDocuments SET documentType = ?, documentNumber = ?, issueDate = ? WHERE customerId = ?`;
+        const furnitureQuery = `UPDATE FurnitureRequirements SET amount = ?, description = ? WHERE customerId = ?`;
+        const businessQuery = `UPDATE BusinessDetails SET businessName = ?, registrationNumber = ?, industry = ?, revenue = ? WHERE customerId = ?`;
+
+        db.query(customerQuery, [name, email, phone, customerID], (err) => {
             if (err) return db.rollback(() => res.status(500).json({ message: 'Error updating customer', error: err }));
 
-            // Update Address if provided
-            if (address) {
-                const updateAddressQuery = 'UPDATE Addresses SET street = ?, city = ?, state = ?, zip = ?, country = ? WHERE customerId = (SELECT id FROM Customers WHERE customerID = ?)';
-                db.query(updateAddressQuery, [address.street, address.city, address.state, address.zip, address.country, customerID], (err) => {
-                    if (err) return db.rollback(() => res.status(500).json({ message: 'Error updating address', error: err }));
-                });
-            }
+            db.query(addressQuery, [address.street, address.city, address.state, address.zip, address.country, customerID], (err) => {
+                if (err) return db.rollback(() => res.status(500).json({ message: 'Error updating address', error: err }));
 
-            // Update Documents if provided (for simplicity, deleting and reinserting documents)
-            if (documents && documents.length > 0) {
-                const deleteDocumentsQuery = 'DELETE FROM Documents WHERE customerId = (SELECT id FROM Customers WHERE customerID = ?)';
-                db.query(deleteDocumentsQuery, [customerID], (err) => {
+                db.query(documentQuery, [documents[0].type, documents[0].documentNumber, documents[0].issueDate, documents[0].expiryDate, customerID], (err) => {
                     if (err) return db.rollback(() => res.status(500).json({ message: 'Error updating documents', error: err }));
 
-                    const insertDocumentsQuery = 'INSERT INTO Documents (type, documentNumber, issueDate, expiryDate, customerId) VALUES ?';
-                    const documentValues = documents.map(doc => [doc.type, doc.documentNumber, doc.issueDate, doc.expiryDate, customerID]);
-                    db.query(insertDocumentsQuery, [documentValues], (err) => {
-                        if (err) return db.rollback(() => res.status(500).json({ message: 'Error reinserting documents', error: err }));
+                    db.query(mortgageQuery, [mortgageDocuments[0].documentType, mortgageDocuments[0].documentNumber, mortgageDocuments[0].issueDate, customerID], (err) => {
+                        if (err) return db.rollback(() => res.status(500).json({ message: 'Error updating mortgage documents', error: err }));
+
+                        db.query(furnitureQuery, [furnitureRequirements[0].amount, furnitureRequirements[0].description, customerID], (err) => {
+                            if (err) return db.rollback(() => res.status(500).json({ message: 'Error updating furniture requirements', error: err }));
+
+                            db.query(businessQuery, [businessDetails.businessName, businessDetails.registrationNumber, businessDetails.industry, businessDetails.revenue, customerID], (err) => {
+                                if (err) return db.rollback(() => res.status(500).json({ message: 'Error updating business details', error: err }));
+
+                                db.commit((err) => {
+                                    if (err) return db.rollback(() => res.status(500).json({ message: 'Transaction commit failed', error: err }));
+                                    res.status(200).json({ message: 'Customer and related data updated successfully' });
+                                });
+                            });
+                        });
                     });
                 });
-            }
-
-            // Update other related tables similarly
-
-            // Commit transaction if all updates succeed
-            db.commit(err => {
-                if (err) return db.rollback(() => res.status(500).json({ message: 'Transaction commit failed', error: err }));
-                res.status(200).json({ message: 'Customer and related data updated successfully' });
             });
         });
     });
-});     
+});
 
 module.exports = router;
