@@ -12,25 +12,60 @@
     <!-- Navigation Bar -->
     <nav>
         <button onclick="showSection('customer')">Add Customer Details</button>
-        <button onclick="showSection('create')">Create Loan Account</button>
-        <button onclick="showSection('view')">View Loans and Customer Details</button>
-        <button onclick="showSection('update')">Update Loan Details</button>
-        <button onclick="showSection('delete')">Delete Customer Details</button>
+        <button onclick="showSection('view')"> Customer Details</button>
+        <button onclick="showSection('update')">Update Customer Details</button>
+        <button onclick="showSection('delete')">Delete Customer Details</button> 
     </nav>
 
-    <!-- Sections for Loan Operations -->
-    <div id="create-section" class="section">
-        <h3>Applicant Information</h3>
-        <input type="text" id="applicant_name" placeholder="Applicant Name">
-        <input type="text" id="applicant_address" placeholder="Applicant Address">
-        <input type="text" id="phone_number" placeholder="Phone Number">
-        <input type="email" id="email_address" placeholder="Email Address">
+   
+    <!-- Update Customer Details Section -->
+<div id="update-section" class="section">
+    <h3>Update Customer Information</h3>
+    <input type="text" id="customer_id_update" placeholder="Enter Customer ID" />
+    <button onclick="fetchCustomerDetails()">Fetch Customer Details</button>
 
-        <h3>Loan Details</h3>
-        <input type="number" id="loan_amount" placeholder="Loan Amount">
-        <input type="number" step="0.01" id="interest_rate" placeholder="Interest Rate (%)">
-        <input type="number" id="loan_term" placeholder="Loan Term (years)">
-        <button onclick="createLoan()">Generate Loan Account</button>
+    <h4>Customer Information</h4>
+    <input type="text" id="customerName_update" placeholder="Name" />
+    <input type="email" id="customerEmail_update" placeholder="Email" />
+    <input type="text" id="customerPhone_update" placeholder="Phone" />
+
+    <h4>Address Information</h4>
+    <input type="text" id="street_update" placeholder="Street" />
+    <input type="text" id="city_update" placeholder="City" />
+    <input type="text" id="state_update" placeholder="State" />
+    <input type="text" id="zip_update" placeholder="ZIP Code" />
+    <input type="text" id="country_update" placeholder="Country" />
+
+    <h4>Identification Documents</h4>
+    <input type="text" id="documentType_update" placeholder="Document Type" />
+    <input type="text" id="documentNumber_update" placeholder="Document Number" />
+    <input type="date" id="issueDate_update" placeholder="Issue Date" />
+    <input type="date" id="expiryDate_update" placeholder="Expiry Date" />
+
+    <h4>Mortgage Documents</h4>
+    <input type="text" id="mortgageDocumentType_update" placeholder="Document Type" />
+    <input type="text" id="mortgageDocumentNumber_update" placeholder="Document Number" />
+    <input type="date" id="mortgageIssueDate_update" placeholder="Issue Date" />
+
+    <h4>Furniture Requirements</h4>
+    <input type="number" step="0.01" id="furnitureAmount_update" placeholder="Amount" />
+    <textarea id="furnitureDescription_update" placeholder="Description"></textarea>
+
+    <h4>Business Details</h4>
+    <input type="text" id="businessName_update" placeholder="Business Name" />
+    <input type="text" id="registrationNumber_update" placeholder="Registration Number" />
+    <input type="text" id="industry_update" placeholder="Industry" />
+    <input type="number" step="0.01" id="revenue_update" placeholder="Revenue" />
+
+    <button onclick="updateCustomerDetails()">Update Customer</button>
+</div>
+
+
+     <!-- Delete Loan Section -->
+     <div id="delete-section" class="section">
+        <h3>Delete Customer</h3>
+        <input type="text" id="customer_id_delete" placeholder="Enter Customer ID">
+         <button onclick="deleteCustomer()">Delete Customer</button>
     </div>
 
     <!-- View Loans and Customer Details Section -->
@@ -56,27 +91,9 @@
 </div>
 
 
-    <!-- Update Loan Information Section -->
-    <div id="update-section" class="section">
-        <h3>Update Loan Information</h3>
-        <input type="number" id="loan_id_update" placeholder="Loan ID">
-        <input type="text" id="applicant_name_update" placeholder="Applicant Name">
-        <input type="text" id="applicant_address_update" placeholder="Applicant Address">
-        <input type="text" id="phone_number_update" placeholder="Phone Number">
-        <input type="email" id="email_address_update" placeholder="Email Address">
-        <input type="number" id="loan_amount_update" placeholder="Loan Amount">
-        <input type="number" step="0.01" id="interest_rate_update" placeholder="Interest Rate (%)">
-        <input type="number" id="loan_term_update" placeholder="Loan Term (years)">
-        <button onclick="updateLoan()">Update Loan</button>
-    </div>
+   
 
-    <!-- Delete Loan Section -->
-    
-    <div id="delete-customer-section" class="section">
-        <h3>Delete Customer</h3>
-        <input type="text" id="customer_id_delete" placeholder="Enter Customer ID">
-         <button onclick="deleteCustomer()">Delete Customer</button>
-    </div>
+  
     <!-- Customer Management Sections -->
     <div id="customer-section" class="section">
         <h2>Customer Information</h2>
@@ -117,6 +134,9 @@
         
         <button onclick="submitAllData()">Submit Customer Details</button>
     </div>
+
+     
+    
 
     <script src="script.js"></script>
 </body>
