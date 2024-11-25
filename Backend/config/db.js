@@ -4,8 +4,8 @@ const mysql = require('mysql2');
 // Create a MySQL database connection
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root',         // Replace with your MySQL username
-    password: 'root', // Replace with your MySQL password
+    user: 'root',         
+    password: 'root', 
     database: 'loan_system'
 });
 
