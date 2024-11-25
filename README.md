@@ -5,10 +5,7 @@ Loan Origination System - Office Furniture
 The Loan Origination System for Office Furniture simplifies and automates the loan application.
 I This system manages customer details, business information, and loan-related documentation with robust backend processing.
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> a2e8d27d06e6ba5a59edeae940b81faaf2b0297d
+
 ## Features provided in application
 - Loan application management with customer and business details.
 - Integration with document management for loan processing.
@@ -38,9 +35,5 @@ GET /api/customers/:id: Retrieve a specific customer's details.
 PUT /api/customers/:id: Update a customer's information.
 DELETE /api/customers/:id: Delete a customer.
 
- HEAD
 
-
-ad770f6 (Update README.md)
- a2e8d27d06e6ba5a59edeae940b81faaf2b0297d
 
