@@ -26,5 +26,12 @@ Document.js: Tracks uploaded documents.
 /package.json: Project dependencies and scripts.
 /README.md: Documentation for the project.
 
+## EndPoint
+File: routes/customerRoutes.js
+Endpoints:
+POST /api/customers: Add a new customer.
+GET /api/customers/:id: Retrieve a specific customer's details.
+PUT /api/customers/:id: Update a customer's information.
+DELETE /api/customers/:id: Delete a customer.
 
 
