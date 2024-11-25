@@ -9,13 +9,18 @@ body {
     background-size: cover;  
     background-position: center; 
     background-attachment: fixed;  
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
-    color: #0b3d91; /* Dark blue */
-    margin-bottom: 20px;
+    color: #48494b; /* Dark blue */
+    margin-bottom: 50px;
     font-size: 2.5em;
     font-weight: bold;
+     
+    font-family: Arial, sans-serif; /* Font of your choice */
+    
 }
 
 /* Navigation Bar Styling */
@@ -144,4 +149,80 @@ body::-webkit-scrollbar-thumb {
 
 #delete-customer-section {
     display: block !important; /* Ensures the delete customer section is visible */
+}
+
+.bottom-center-text {
+    position: fixed; /* Fixes the position of the text */
+    bottom: 75px; /* 20px from the bottom */
+    left: 50%; /* Centers the text horizontally */
+    transform: translateX(-50%); /* Adjusts the text to be perfectly centered */
+    color: #f8f5f5;
+    font-size: 1.50em;
+    font-family: Arial, sans-serif;
+    line-height: 1.5; /* Adjusts the line height to make the text more readable */
+    text-align: center; /* Centers the text within the paragraph */
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.heading {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: #333;
+    font-size: 1em;
+}
+
+.tagline {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: #333;
+    font-size: 1em;
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+html {
+    scroll-behavior: smooth;
+}
+
+/* Footer Styling */
+.footer {
+    position: fixed; /* Keeps the footer at the bottom */
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 15%; /* Set height to 15% of the viewport */
+    background-color: #343a40; /* Dark background for footer */
+    color: white;
+    display: flex;
+    flex-direction: column; /* Stacks the items vertically */
+    justify-content: center; /* Vertically center the content */
+}
+
+.footer a {
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #f1f1f1; /* Lighter color when hovered */
+}
+
+/* Adjusting the layout of the list */
+.footer .list-inline {
+    padding-left: 0;
+    list-style: none;
+}
+
+.footer .list-inline-item {
+    margin-right: 15px; /* Adds space between the links */
+}
+
+/* Optional: Ensuring the body content doesn't overlap the footer */
+body {
+    padding-bottom: 15%; /* Adjust space to avoid overlap */
 }
