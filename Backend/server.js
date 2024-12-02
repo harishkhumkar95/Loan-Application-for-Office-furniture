@@ -7,7 +7,7 @@ const app = express();
 
 
 app.use(cors());
-app.use(bodyParser.json()); // Ensure this is included
+app.use(bodyParser.json()); 
 
 // Import and set up routes
 
