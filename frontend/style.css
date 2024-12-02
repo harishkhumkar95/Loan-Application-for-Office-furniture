@@ -168,6 +168,40 @@ body::-webkit-scrollbar-thumb {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+p {
+    margin-top: 15px;
+    text-align: center;
+}
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+label {
+    margin-top: 10px;
 }
 
 .heading {
