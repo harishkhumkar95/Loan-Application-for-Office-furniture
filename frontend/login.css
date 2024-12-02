@@ -1,0 +1,80 @@
+/* Ensure the body takes up the full viewport height and uses Flexbox for centering */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    height: 100vh;           /* Full viewport height */
+    margin: 0;
+}
+
+/* Style the container holding the form */
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Ensures the form doesn't get too wide */
+}
+
+/* Center the heading text */
+h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+/* Style the form elements */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Add spacing above labels */
+label {
+    margin-top: 10px;
+}
+
+/* Style the input fields */
+input {
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+/* Style the submit button */
+button {
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Change button color on hover */
+button:hover {
+    background-color: #218838;
+}
+
+/* Center the paragraph text */
+p {
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* Style the links */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* Underline links on hover */
+a:hover {
+    text-decoration: underline;
+}
