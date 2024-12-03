@@ -1,4 +1,4 @@
-/* Ensure the body takes up the full viewport height and uses Flexbox for centering */
+/* Center the body content */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
