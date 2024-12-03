@@ -1,20 +1,20 @@
-// backend/config/db.js
-const mysql = require('mysql2');
+/// backend/config/db.js
+const { Sequelize } = require('sequelize');
 
-// Create a MySQL database connection
-const db = mysql.createConnection({
+// Initialize Sequelize with your database credentials
+const sequelize = new Sequelize('loan_system', 'root', 'root', {
     host: 'localhost',
-    user: 'root',         
-    password: 'root', 
-    database: 'loan_system'
+    dialect: 'mysql', // Specify the dialect as 'mysql'
 });
 
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed:', err.stack);
-        return;
-    }
-    console.log('Connected to MySQL database.');
-});
+// Test the database connection
+sequelize.authenticate()
+    .then(() => {
+        console.log('Connected to MySQL database.');
+    })
+    .catch(err => {
+        console.error('Database connection failed:', err);
+    });
 
-module.exports = db;
+module.exports = sequelize;
+
