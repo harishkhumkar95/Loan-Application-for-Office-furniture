@@ -54,4 +54,8 @@
 ### MySQL Integration
 - [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/) - Official MySQL documentation.
 - [Sequelize ORM Documentation](https://sequelize.org/) - If using Sequelize ORM for MySQL integration.
+### Added login feature 2/12/2024
+- https://www.geeksforgeeks.org/how-to-link-a-button-to-another-page-in-html/
+- https://stackoverflow.com/questions/54063609/problems-using-sequelize-models-errors-like-cannot-read-property-create-of-u
+- https://www.geeksforgeeks.org/how-to-resolve-a-cannot-find-module-error-using-node-js/
 
