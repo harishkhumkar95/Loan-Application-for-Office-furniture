@@ -168,19 +168,55 @@ background-size: cover; background-position: center; background-attachment: fixe
             <div id="customerDetails" class="mt-3"></div>
         </div>
 
-        <!-- Update Section -->
         <div id="update-section" class="section">
             <h2 class="text-primary">Update Customer Information</h2>
+        
+            <!-- Customer ID -->
             <input type="text" id="customer_id_update" class="form-control my-2" placeholder="Enter Customer ID">
             <button class="btn btn-primary" onclick="fetchCustomerDetails()">Fetch Customer Details</button>
-
-            <!-- Add other update inputs as required -->
+        
+            <!-- Customer Basic Information -->
             <input type="text" id="customerName_update" class="form-control my-2" placeholder="Name">
             <input type="email" id="customerEmail_update" class="form-control my-2" placeholder="Email">
-            <!-- Add more fields here -->
-            
+            <input type="text" id="customerPhone_update" class="form-control my-2" placeholder="Phone">
+        
+            <!-- Address Fields -->
+            <h3 class="text-secondary">Address</h3>
+            <input type="text" id="street_update" class="form-control my-2" placeholder="Street">
+            <input type="text" id="city_update" class="form-control my-2" placeholder="City">
+            <input type="text" id="state_update" class="form-control my-2" placeholder="State">
+            <input type="text" id="zip_update" class="form-control my-2" placeholder="ZIP Code">
+            <input type="text" id="country_update" class="form-control my-2" placeholder="Country">
+        
+            <!-- Documents Section -->
+            <h3 class="text-secondary">Documents</h3>
+            <input type="text" id="documentType_update" class="form-control my-2" placeholder="Document Type">
+            <input type="text" id="documentNumber_update" class="form-control my-2" placeholder="Document Number">
+            <input type="date" id="issueDate_update" class="form-control my-2" placeholder="Issue Date">
+            <input type="date" id="expiryDate_update" class="form-control my-2" placeholder="Expiry Date">
+        
+            <!-- Mortgage Documents Section -->
+            <h3 class="text-secondary">Mortgage Documents</h3>
+            <input type="text" id="mortgageDocumentType_update" class="form-control my-2" placeholder="Mortgage Document Type">
+            <input type="text" id="mortgageDocumentNumber_update" class="form-control my-2" placeholder="Mortgage Document Number">
+            <input type="date" id="mortgageIssueDate_update" class="form-control my-2" placeholder="Issue Date">
+        
+            <!-- Furniture Requirements Section -->
+            <h3 class="text-secondary">Furniture Requirements</h3>
+            <input type="number" id="furnitureAmount_update" class="form-control my-2" placeholder="Amount">
+            <input type="text" id="furnitureDescription_update" class="form-control my-2" placeholder="Description">
+        
+            <!-- Business Details -->
+            <h3 class="text-secondary">Business Details</h3>
+            <input type="text" id="businessName_update" class="form-control my-2" placeholder="Business Name">
+            <input type="text" id="registrationNumber_update" class="form-control my-2" placeholder="Registration Number">
+            <input type="text" id="industry_update" class="form-control my-2" placeholder="Industry">
+            <input type="number" id="revenue_update" class="form-control my-2" placeholder="Revenue">
+        
+            <!-- Update Button -->
             <button class="btn btn-primary mt-3" onclick="updateCustomerDetails()">Update Customer</button>
         </div>
+        
 
         <!-- Delete Section -->
         <div id="delete-section" class="section">
