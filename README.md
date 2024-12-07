@@ -12,11 +12,15 @@
     - Database-driven system for structured data storage.
     - RESTful API for frontend-backend communication.
     ## Installation
-    - Node.js (version 14.x or above)
+    - Node.js 
+    -Express.js: Framework for routing and middleware.
+    - Sequelize: ORM for managing database interactions.
     - MySql Database
     - PostMan For API testing
     - Used VS code as code editer
     - Install dependencies
+    
+
     ## File Structure
     /Backend/server.js: Entry point for the backend server.
     /Backend/models: Data models for MongoDB collections.
@@ -59,3 +63,24 @@
 - https://stackoverflow.com/questions/54063609/problems-using-sequelize-models-errors-like-cannot-read-property-create-of-u
 - https://www.geeksforgeeks.org/how-to-resolve-a-cannot-find-module-error-using-node-js/
 
+### Current Enhancements
+Added Add authentication and authorization features.
+Implement logging and monitoring for API requests.
+Refactored the system to use Sequelize ORM for all database operations.
+Optimized data relationships and removed raw SQL queries for maintainability.
+### Acknowledgements
+Sequelize documentation for ORM integration.
+Community forums for resolving ORM-specific challenges.
+
+### Configure Database:
+Update database credentials in the config/db.js file.
+
+### Run Synchronization:
+Sync database models:
+node config/sync.js
+
+### Start server 
+node server.js 
+### Access API:
+
+Base URL: http://localhost:5000/api/customers.
