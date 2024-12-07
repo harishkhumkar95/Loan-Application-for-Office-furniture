@@ -1,7 +1,14 @@
 const express = require('express');
-const db = require('../config/db'); // Import MySQL connection
+const Customer = require('../models/Customer'); // Import Customer model
+const Address = require('../models/Address'); // Import Address model
+const BusinessDetails = require('../models/BusinessDetails'); // Import BusinessDetails model
+const Document = require('../models/Document'); // Import Document model
+const FurnitureRequirement = require('../models/FurnitureRequirement'); // Import FurnitureRequirement model
+const MortgageDocument = require('../models/MortgageDocument');
 
 const router = express.Router();
+
+// Create a new customer with related data
 
 router.post('/', async (req, res) => {
     console.log('Received request body:', req.body);
@@ -15,296 +22,211 @@ router.post('/', async (req, res) => {
         documents,
         mortgageDocuments,
         furnitureRequirements,
-        businessDetails
+        businessDetails,
     } = req.body;
 
+    // Validate required fields
     if (!customerID || !name || !email || !phone) {
         return res.status(400).json({ message: 'Missing required customer fields' });
     }
 
-    let connection;
     try {
-        // Get a connection from the pool
-        connection = await db.promise().getConnection();
-        await connection.beginTransaction(); // Start transaction
+        // Create a customer with related data
+        const customer = await Customer.create(
+            {
+                customerID,
+                name,
+                email,
+                phone,
+                // Include associated Address if provided
+                address: address ? {
+                    street: address.street,
+                    city: address.city,
+                    state: address.state,
+                    zip: address.zip,
+                    country: address.country,
+                } : undefined,
+                // Include associated Documents if provided
+                documents: documents?.map(doc => ({
+                    type: doc.type,
+                    documentNumber: doc.documentNumber,
+                    issueDate: doc.issueDate,
+                    expiryDate: doc.expiryDate,
+                })),
+                // Include associated MortgageDocuments if provided
+                mortgageDocuments: mortgageDocuments?.map(mortgageDoc => ({
+                    documentType: mortgageDoc.documentType,
+                    documentNumber: mortgageDoc.documentNumber,
+                    issueDate: mortgageDoc.issueDate,
+                })),
+                // Include associated FurnitureRequirements if provided
+                furnitureRequirements: furnitureRequirements?.map(furnitureReq => ({
+                    amount: furnitureReq.amount,
+                    description: furnitureReq.description,
+                })),
+                // Include associated BusinessDetails if provided
+                businessDetails: businessDetails ? {
+                    businessName: businessDetails.businessName,
+                    registrationNumber: businessDetails.registrationNumber,
+                    industry: businessDetails.industry,
+                    revenue: businessDetails.revenue,
+                } : undefined,
+            },
+            {
+                include: [
+                    { model: Address, as: 'address' },
+                    { model: Document, as: 'documents' },
+                    { model: MortgageDocument, as: 'mortgageDocuments' },
+                    { model: FurnitureRequirement, as: 'furnitureRequirements' },
+                    { model: BusinessDetails, as: 'businessDetails' },
+                ],
+            }
+        );
 
-        // Insert Customer
-        const customerQuery = 'INSERT INTO Customers (customerID, name, email, phone) VALUES (?, ?, ?, ?)';
-        const [customerResult] = await connection.query(customerQuery, [customerID, name, email, phone]);
-        const customerId = customerResult.insertId;
-
-        // Insert Address
-        if (address) {
-            const addressQuery = 'INSERT INTO Addresses (street, city, state, zip, country, customerId) VALUES (?, ?, ?, ?, ?, ?)';
-            await connection.query(addressQuery, [address.street, address.city, address.state, address.zip, address.country, customerId]);
-        }
-
-        // Insert Documents
-        if (documents && documents.length > 0) {
-            const documentQuery = 'INSERT INTO Documents (type, documentNumber, issueDate, expiryDate, customerId) VALUES ?';
-            const documentValues = documents.map(doc => [doc.type, doc.documentNumber, doc.issueDate, doc.expiryDate, customerId]);
-            await connection.query(documentQuery, [documentValues]);
-        }
-
-        // Insert Mortgage Documents
-        if (mortgageDocuments && mortgageDocuments.length > 0) {
-            const mortgageQuery = 'INSERT INTO MortgageDocuments (documentType, documentNumber, issueDate, customerId) VALUES ?';
-            const mortgageValues = mortgageDocuments.map(doc => [doc.documentType, doc.documentNumber, doc.issueDate, customerId]);
-            await connection.query(mortgageQuery, [mortgageValues]);
-        }
-
-        // Insert Furniture Requirements
-        if (furnitureRequirements && furnitureRequirements.length > 0) {
-            const furnitureQuery = 'INSERT INTO FurnitureRequirements (amount, description, customerId) VALUES ?';
-            const furnitureValues = furnitureRequirements.map(req => [req.amount, req.description, customerId]);
-            await connection.query(furnitureQuery, [furnitureValues]);
-        }
-
-        // Insert Business Details
-        if (businessDetails) {
-            const businessQuery = 'INSERT INTO BusinessDetails (businessName, registrationNumber, industry, revenue, customerId) VALUES (?, ?, ?, ?, ?)';
-            await connection.query(businessQuery, [
-                businessDetails.businessName,
-                businessDetails.registrationNumber,
-                businessDetails.industry,
-                businessDetails.revenue,
-                customerId
-            ]);
-        }
-
-        await connection.commit(); // Commit transaction
-        res.status(201).json({ message: 'Customer and related data created successfully', customerId });
+        res.status(201).json({ message: 'Customer and related data created successfully', customer });
     } catch (error) {
-        if (connection) await connection.rollback(); // Rollback transaction on error
         console.error('Error creating customer and related data:', error);
         res.status(500).json({ message: 'Error creating customer and related data', error });
-    } finally {
-        if (connection) connection.release(); // Release the connection back to the pool
     }
 });
 
-// Route to get customer details by customerID
-router.get('/:customerID', (req, res) => {
+
+// Get customer details by customerID
+
+
+router.get('/:customerID', async (req, res) => {
     const customerID = req.params.customerID;
 
-    // Log the received customerID
     console.log(`Received request for customerID: ${customerID}`);
 
-    const query = `
-        SELECT * FROM Customers c
-        LEFT JOIN Addresses a ON c.id = a.customerId
-        LEFT JOIN Documents d ON c.id = d.customerId
-        LEFT JOIN MortgageDocuments m ON c.id = m.customerId
-        LEFT JOIN FurnitureRequirements f ON c.id = f.customerId
-        LEFT JOIN BusinessDetails b ON c.id = b.customerId
-        WHERE c.customerID = ?
-    `;
+    try {
+        const customer = await Customer.findOne({
+            where: { customerID },
+            include: [
+                {
+                    model: Address,
+                    as: 'address', // Specify the alias used in the association
+                },
+                {
+                    model: Document,
+                    as: 'documents', // Specify the alias used in the association
+                },
+                {
+                    model: MortgageDocument,
+                    as: 'mortgageDocuments', // Specify the alias used in the association
+                },
+                {
+                    model: FurnitureRequirement,
+                    as: 'furnitureRequirements', // Specify the alias used in the association
+                },
+                {
+                    model: BusinessDetails,
+                    as: 'businessDetails', // Specify the alias used in the association
+                },
+            ],
+        });
 
-    // Log the query being executed
-    console.log('Executing query:', query);
-
-    db.query(query, [customerID], (err, results) => {
-        if (err) {
-            console.error('Error retrieving customer details:', err);
-            return res.status(500).json({ message: 'Error retrieving customer details', error: err });
-        }
-
-        console.log('Query results:', results);
-
-        if (results.length === 0) {
-            console.log('No customer found for customerID:', customerID);
+        if (!customer) {
             return res.status(404).json({ message: 'Customer not found' });
         }
 
-        // Extract customer base data from the first row
-        const customerData = {
-            customerID: results[0].customerID,
-            name: results[0].name,
-            email: results[0].email,
-            phone: results[0].phone,
-            address: {
-                street: results[0].street,
-                city: results[0].city,
-                state: results[0].state,
-                zip: results[0].zip,
-                country: results[0].country,
-            },
-            documents: [],
-            mortgageDocuments: [],
-            furnitureRequirements: [],
-            businessDetails: {
-                businessName: results[0].businessName,
-                registrationNumber: results[0].registrationNumber,
-                industry: results[0].industry,
-                revenue: results[0].revenue
-            }
-        };
-
-        // Group related records by iterating over each row
-        results.forEach(row => {
-            // Group documents
-            if (row.type && row.documentNumber) {
-                customerData.documents.push({
-                    type: row.type,
-                    documentNumber: row.documentNumber,
-                    issueDate: row.issueDate,
-                    expiryDate: row.expiryDate
-                });
-            }
-
-            // Group mortgage documents
-            if (row.documentType && row.documentNumber) {
-                customerData.mortgageDocuments.push({
-                    documentType: row.documentType,
-                    documentNumber: row.documentNumber,
-                    issueDate: row.issueDate
-                });
-            }
-
-            // Group furniture requirements
-            if (row.amount && row.description) {
-                customerData.furnitureRequirements.push({
-                    amount: row.amount,
-                    description: row.description
-                });
-            }
-        });
-
-        // Log the final customerData object before sending the response
-        console.log('Customer data to be sent:', customerData);
-
-        res.status(200).json(customerData);
-    });
-});
-
-// Update Customer by ID
-
-router.delete('/:customerID', async (req, res) => {
-    const customerID = req.params.customerID;
-    console.log(`Received request for customerID: ${customerID}`);
-
-    let connection;
-
-    try {
-        // Get a connection from the pool
-        connection = await db.promise().getConnection();
-        await connection.beginTransaction(); // Start transaction
-
-        // Delete related entries in other tables first
-        const deleteAddress = 'DELETE FROM Addresses WHERE customerId = (SELECT id FROM Customers WHERE customerID = ?)';
-        await connection.query(deleteAddress, [customerID]);
-
-        const deleteDocuments = 'DELETE FROM Documents WHERE customerId = (SELECT id FROM Customers WHERE customerID = ?)';
-        await connection.query(deleteDocuments, [customerID]);
-
-        const deleteMortgageDocs = 'DELETE FROM MortgageDocuments WHERE customerId = (SELECT id FROM Customers WHERE customerID = ?)';
-        await connection.query(deleteMortgageDocs, [customerID]);
-
-        const deleteFurnitureReq = 'DELETE FROM FurnitureRequirements WHERE customerId = (SELECT id FROM Customers WHERE customerID = ?)';
-        await connection.query(deleteFurnitureReq, [customerID]);
-
-        const deleteBusinessDetails = 'DELETE FROM BusinessDetails WHERE customerId = (SELECT id FROM Customers WHERE customerID = ?)';
-        await connection.query(deleteBusinessDetails, [customerID]);
-
-        // Finally, delete the customer record
-        const deleteCustomer = 'DELETE FROM Customers WHERE customerID = ?';
-        await connection.query(deleteCustomer, [customerID]);
-
-        await connection.commit(); // Commit transaction
-        res.status(200).json({ message: 'Customer and related data deleted successfully' });
+        res.status(200).json(customer);
     } catch (error) {
-        if (connection) await connection.rollback(); // Rollback transaction on error
-        console.error('Error deleting customer and related data:', error);
-        res.status(500).json({ message: 'Error deleting customer and related data', error });
-    } finally {
-        if (connection) connection.release(); // Release the connection back to the pool
+        console.error('Error retrieving customer details:', error);
+        res.status(500).json({ message: 'Error retrieving customer details', error });
     }
 });
 
-
+// Update customer and related data
 router.put('/:customerID', async (req, res) => {
     const customerID = req.params.customerID;
     const { name, email, phone, address, documents, mortgageDocuments, furnitureRequirements, businessDetails } = req.body;
 
-    let connection;
     try {
-        // Get a connection from the pool
-        connection = await db.promise().getConnection();
-        await connection.beginTransaction(); // Start transaction
+        const customer = await Customer.findOne({ where: { customerID } });
 
-        // Update Customer
-        const customerQuery = `UPDATE Customers SET name = ?, email = ?, phone = ? WHERE customerID = ?`;
-        await connection.query(customerQuery, [name, email, phone, customerID]);
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+
+        // Update customer details
+        await customer.update({ name, email, phone });
 
         // Update Address
         if (address) {
-            const addressQuery = `UPDATE Addresses SET street = ?, city = ?, state = ?, zip = ?, country = ? WHERE customerId = ?`;
-            await connection.query(addressQuery, [
-                address.street,
-                address.city,
-                address.state,
-                address.zip,
-                address.country,
-                customerID
-            ]);
+            const existingAddress = await Address.findOne({ where: { customerId: customer.customerID } });
+            if (existingAddress) {
+                await existingAddress.update(address);
+            } else {
+                await Address.create({ ...address, customerId: customer.customerID });
+            }
         }
 
         // Update Documents
-        if (documents && documents[0]) {
-            const documentQuery = `UPDATE Documents SET type = ?, documentNumber = ?, issueDate = ?, expiryDate = ? WHERE customerId = ?`;
-            await connection.query(documentQuery, [
-                documents[0].type,
-                documents[0].documentNumber,
-                documents[0].issueDate,
-                documents[0].expiryDate,
-                customerID
-            ]);
+        if (documents) {
+            await Document.destroy({ where: { customerId: customer.customerID } });
+            await Document.bulkCreate(documents.map(doc => ({ ...doc, customerId: customer.customerID })));
         }
 
         // Update Mortgage Documents
-        if (mortgageDocuments && mortgageDocuments[0]) {
-            const mortgageQuery = `UPDATE MortgageDocuments SET documentType = ?, documentNumber = ?, issueDate = ? WHERE customerId = ?`;
-            await connection.query(mortgageQuery, [
-                mortgageDocuments[0].documentType,
-                mortgageDocuments[0].documentNumber,
-                mortgageDocuments[0].issueDate,
-                customerID
-            ]);
+        if (mortgageDocuments) {
+            await MortgageDocument.destroy({ where: { customerId: customer.customerID } });
+            await MortgageDocument.bulkCreate(mortgageDocuments.map(doc => ({ ...doc, customerId: customer.customerID })));
         }
 
         // Update Furniture Requirements
-        if (furnitureRequirements && furnitureRequirements[0]) {
-            const furnitureQuery = `UPDATE FurnitureRequirements SET amount = ?, description = ? WHERE customerId = ?`;
-            await connection.query(furnitureQuery, [
-                furnitureRequirements[0].amount,
-                furnitureRequirements[0].description,
-                customerID
-            ]);
+        if (furnitureRequirements) {
+            await FurnitureRequirement.destroy({ where: { customerId: customer.customerID } });
+            await FurnitureRequirement.bulkCreate(furnitureRequirements.map(req => ({ ...req, customerId: customer.customerID })));
         }
 
         // Update Business Details
         if (businessDetails) {
-            const businessQuery = `UPDATE BusinessDetails SET businessName = ?, registrationNumber = ?, industry = ?, revenue = ? WHERE customerId = ?`;
-            await connection.query(businessQuery, [
-                businessDetails.businessName,
-                businessDetails.registrationNumber,
-                businessDetails.industry,
-                businessDetails.revenue,
-                customerID
-            ]);
+            const existingBusinessDetails = await BusinessDetails.findOne({ where: { customerId: customer.customerID } });
+            if (existingBusinessDetails) {
+                await existingBusinessDetails.update(businessDetails);
+            } else {
+                await BusinessDetails.create({ ...businessDetails, customerId: customer.customerID });
+            }
         }
 
-        // Commit the transaction
-        await connection.commit();
         res.status(200).json({ message: 'Customer and related data updated successfully' });
     } catch (error) {
-        if (connection) await connection.rollback(); // Rollback transaction on error
-        console.error('Error updating customer:', error);
+        console.error('Error updating customer and related data:', error);
         res.status(500).json({ message: 'Error updating customer and related data', error });
-    } finally {
-        if (connection) connection.release(); // Release connection back to the pool
     }
 });
 
+// Delete customer and related data
+
+router.delete('/:customerID', async (req, res) => {
+    const customerID = req.params.customerID;
+
+    try {
+        // Find the customer
+        const customer = await Customer.findOne({
+            where: { customerID },
+        });
+
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+
+        // Explicitly delete related records
+        await Address.destroy({ where: { customerId: customerID } }); // Delete associated address
+        await Document.destroy({ where: { customerId: customerID } }); // Delete associated documents
+        await MortgageDocument.destroy({ where: { customerId: customerID } }); // Delete associated mortgage documents
+        await FurnitureRequirement.destroy({ where: { customerId: customerID } }); // Delete associated furniture requirements
+        await BusinessDetails.destroy({ where: { customerId: customerID } }); // Delete associated business details
+
+        // Delete the customer
+        await customer.destroy();
+
+        res.status(200).json({ message: 'Customer and related data deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting customer and related data:', error);
+        res.status(500).json({ message: 'Error deleting customer and related data', error });
+    }
+});
 
 module.exports = router;
