@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const db = require('./config/db'); // Use the updated db.js with mysql2
+const sequelize = require('./config/db');  // Use the updated db.js with mysql2
+
 
 const app = express();
 
@@ -16,14 +17,18 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/auth', authRoutes);
 
 // Test database connection
-db.getConnection((err, connection) => {
-    if (err) {
-        console.error('Error connecting to the database:', err.message);
-        process.exit(1); // Exit if connection fails
-    }
-    console.log('Database connected...');
-    connection.release(); // Release the connection back to the pool
-});
+(async () => {
+  try {
+      await sequelize.authenticate();
+      console.log('Connected to MySQL database.');
+
+      await sequelize.sync(); // Synchronize models with the database
+      console.log('Database synchronized successfully.');
+  } catch (error) {
+      console.error('Database connection or synchronization failed:', error);
+      process.exit(1); // Exit if there is a failure
+  }
+})();
 
 console.log("Customer routes mounted at /api/customers");
 
