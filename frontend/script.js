@@ -402,8 +402,62 @@ async function submitAllData() {
 }
 
 // Function to view customer details
+// async function viewCustomerDetails() {
+//     const customerID = document.getElementById('customerIDInput').value;
+//     if (!customerID) {
+//         alert("Please enter a valid Customer ID.");
+//         return;
+//     }
+
+//     try {
+//         const response = await fetch(`${API_URL}/${customerID}`);
+        
+//         // Check if the customer ID was not found
+//         if (response.status === 404) {
+//             alert("Customer ID not found in the database.");
+//             return;
+//         }
+
+//         if (!response.ok) {
+//             alert('Error retrieving customer details');
+//             return;
+//         }
+
+//         const customerData = await response.json();
+//         document.getElementById('customerDetails').innerHTML = `
+//             <h3>Customer Information</h3>
+//             <p>ID: ${customerData.customerID}</p>
+//             <p>Name: ${customerData.name}</p>
+//             <p>Email: ${customerData.email}</p>
+//             <p>Phone: ${customerData.phone}</p>
+
+//             <h3>Address</h3>
+//             <p>${customerData.address.street}, ${customerData.address.city}, ${customerData.address.state}, ${customerData.address.zip}, ${customerData.address.country}</p>
+
+//             <h3>Documents</h3>
+//             <ul>${customerData.documents.map(doc => `<li>${doc.type} - ${doc.documentNumber} (Expires: ${doc.expiryDate})</li>`).join('')}</ul>
+
+//             <h3>Mortgage Documents</h3>
+//             <ul>${customerData.mortgageDocuments.map(doc => `<li>${doc.documentType} - ${doc.documentNumber}</li>`).join('')}</ul>
+
+//             <h3>Furniture Requirements</h3>
+//             <ul>${customerData.furnitureRequirements.map(req => `<li>${req.description} - €${req.amount}</li>`).join('')}</ul>
+
+//             <h3>Business Details</h3>
+//             <p>Name: ${customerData.businessDetails.businessName}</p>
+//             <p>Registration: ${customerData.businessDetails.registrationNumber}</p>
+//             <p>Industry: ${customerData.businessDetails.industry}</p>
+//             <p>Revenue: €${customerData.businessDetails.revenue}</p>
+//         `;
+//     } catch (error) {
+//         console.error('Error:', error);
+//         alert('Error retrieving customer details');
+//     }
+// }
+
 async function viewCustomerDetails() {
     const customerID = document.getElementById('customerIDInput').value;
+
     if (!customerID) {
         alert("Please enter a valid Customer ID.");
         return;
@@ -411,7 +465,7 @@ async function viewCustomerDetails() {
 
     try {
         const response = await fetch(`${API_URL}/${customerID}`);
-        
+
         // Check if the customer ID was not found
         if (response.status === 404) {
             alert("Customer ID not found in the database.");
@@ -424,13 +478,16 @@ async function viewCustomerDetails() {
         }
 
         const customerData = await response.json();
+
+        // Render customer details
         document.getElementById('customerDetails').innerHTML = `
             <h3>Customer Information</h3>
             <p>ID: ${customerData.customerID}</p>
             <p>Name: ${customerData.name}</p>
             <p>Email: ${customerData.email}</p>
             <p>Phone: ${customerData.phone}</p>
-
+            <h3>Loan Status</h3>
+            <p><strong>Status:</strong> ${customerData.approvalStatus || 'Pending'}</p>
             <h3>Address</h3>
             <p>${customerData.address.street}, ${customerData.address.city}, ${customerData.address.state}, ${customerData.address.zip}, ${customerData.address.country}</p>
 
@@ -449,11 +506,117 @@ async function viewCustomerDetails() {
             <p>Industry: ${customerData.businessDetails.industry}</p>
             <p>Revenue: €${customerData.businessDetails.revenue}</p>
         `;
+
+        // Display Approve/Reject buttons dynamically
+        const actions = document.getElementById('creditManagerActions');
+        actions.style.display = 'block';
+
+        // Attach customerID to Approve/Reject buttons
+        document.getElementById('approveButton').setAttribute('data-customer-id', customerData.customerID);
+        document.getElementById('rejectButton').setAttribute('data-customer-id', customerData.customerID);
+
     } catch (error) {
         console.error('Error:', error);
         alert('Error retrieving customer details');
     }
 }
+
+function showSection(section, module) {
+    console.log(`Active Module: ${module}`); // Debug active module
+    console.log(`Selected Section: ${section}`); // Debug selected section
+
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(sec => {
+        sec.style.display = 'none';
+    });
+
+    // Show the requested section
+    const selectedSection = document.getElementById(`${section}-section`);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+
+    // Logic to enable/disable Approve/Reject buttons
+    const creditManagerActions = document.getElementById('creditManagerActions');
+    const approveButton = document.getElementById('approveButton');
+    const rejectButton = document.getElementById('rejectButton');
+
+    if (creditManagerActions) {
+        if (module === 'creditManager' && section === 'view') {
+            // Enable buttons for Credit Manager
+            creditManagerActions.style.display = 'block';
+            approveButton.disabled = false;
+            rejectButton.disabled = false;
+        } else if (section === 'view') {
+            // Disable buttons for other modules
+            creditManagerActions.style.display = 'block';
+            approveButton.disabled = true;
+            rejectButton.disabled = true;
+        } else {
+            // Hide buttons for other sections
+            creditManagerActions.style.display = 'none';
+        }
+    }
+}
+
+
+
+
+
+async function approveCustomer() {
+    const customerID = document.getElementById('approveButton').getAttribute('data-customer-id');
+    if (!customerID) {
+        alert('Customer ID not found.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/${customerID}/approve`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok) {
+            alert('Customer approved successfully.');
+            document.getElementById('creditManagerActions').style.display = 'none';
+            // Optionally, reload customer details to reflect the updated status
+            viewCustomerDetails();
+        } else {
+            alert('Failed to approve customer.');
+        }
+    } catch (error) {
+        console.error('Error approving customer:', error);
+        alert('An error occurred while approving the customer.');
+    }
+}
+
+async function rejectCustomer() {
+    const customerID = document.getElementById('rejectButton').getAttribute('data-customer-id');
+    if (!customerID) {
+        alert('Customer ID not found.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/${customerID}/reject`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok) {
+            alert('Customer rejected successfully.');
+            document.getElementById('creditManagerActions').style.display = 'none';
+            // Optionally, reload customer details to reflect the updated status
+            viewCustomerDetails();
+        } else {
+            alert('Failed to reject customer.');
+        }
+    } catch (error) {
+        console.error('Error rejecting customer:', error);
+        alert('An error occurred while rejecting the customer.');
+    }
+}
+
 
 
 // Function to delete a customer

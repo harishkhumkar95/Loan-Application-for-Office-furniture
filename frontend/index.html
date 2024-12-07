@@ -38,7 +38,7 @@ background-size: cover; background-position: center; background-attachment: fixe
 
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary ">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Loan Origination System</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,62 +46,53 @@ background-size: cover; background-position: center; background-attachment: fixe
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-
+                    <!-- Relationship Manager -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRM" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Relationship Manager
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="showSection('customer')">Add Customer Details</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showSection('view')">View Customer Details</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showSection('update')">Update Customer Details</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showSection('delete')">Delete Customer Details</a></li>
-                            
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownRM">
+                            <li><a class="dropdown-item" href="#" onclick="showSection('customer', 'relationshipManager')">Add Customer Details</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showSection('view', 'relationshipManager')">View Customer Details</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showSection('update', 'relationshipManager')">Update Customer Details</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showSection('delete', 'relationshipManager')">Delete Customer Details</a></li>
                         </ul>
                     </li>
+    
+                    <!-- Operations Executive -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Opration executive
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOE" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Operations Executive
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                           
-                            <li><a class="dropdown-item" href="#" onclick="showSection('view')">Verify Customer Details</a></li>
-                            
-                            
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownOE">
+                            <li><a class="dropdown-item" href="#" onclick="showSection('view', 'operationsExecutive')">Verify Customer Details</a></li>
                         </ul>
                     </li>
+    
+                    <!-- Credit Manager -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCM" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Credit Manager
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                           
-                            <li><a class="dropdown-item" href="#" onclick="showSection('view')">Verify Customer Details & Approve</a></li>
-                            
-                            <!-- Add more items as needed -->
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCM">
+                            <li><a class="dropdown-item" href="#" onclick="showSection('view', 'creditManager')">Verify Customer Details & Approve</a></li>
                         </ul>
                     </li>
-
+    
+                    <!-- Account Head -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                           Account Head & dibursement
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAH" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Account Head & Disbursement
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                           
-                            <li><a class="dropdown-item" href="#" onclick="showSection('view')">Verify Customer Details & Diposite Amount</a></li>
-                            
-                            <!-- Add more items as needed -->
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAH">
+                            <li><a class="dropdown-item" href="#" onclick="showSection('view', 'accountHead')">Verify Customer Details & Deposit Amount</a></li>
                         </ul>
                     </li>
-
-                   
-                    <!-- <li class="nav-item">
-                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#applyLoanModal"  href="#" onclick="showSection('customer')">Apply Loan</button>
-                    </li> -->
                 </ul>
             </div>
         </div>
     </nav>
+    
 
 
 
@@ -219,13 +210,29 @@ background-size: cover; background-position: center; background-attachment: fixe
             <button onclick="submitAllData()">Submit & Apply</button>
         </div>
         
-        <!-- View Section -->
-        <div id="view-section" class="section">
-            <h2 class="text-primary">View Customer Details</h2>
-            <input type="text" id="customerIDInput" class="form-control my-2" placeholder="Enter Loan Application ID">
-            <button class="btn btn-primary mt-3" onclick="viewCustomerDetails()">View Customer Details</button>
-            <div id="customerDetails" class="mt-3"></div>
-        </div>
+       
+<!-- View Section -->
+<div id="view-section" class="section">
+    <h2 class="text-primary">View Customer Details</h2>
+    <input type="text" id="customerIDInput" class="form-control my-2" placeholder="Enter Loan Application ID">
+    <button class="btn btn-primary mt-3" onclick="viewCustomerDetails()">View Customer Details</button>
+
+    <!-- Placeholder for customer details -->
+    <div id="customerDetails" class="mt-3"></div>
+
+    <!-- Placeholder for displaying the approval status -->
+    <div id="approvalStatusDisplay" class="mt-3 text-center"></div>
+
+    <!-- Approve/Reject buttons (initially hidden) -->
+    <!-- Approve/Reject buttons for Credit Manager (initially hidden) -->
+    <div id="creditManagerActions" class="mt-3" style="display: none;">
+        <button id="approveButton" class="btn btn-success" onclick="approveCustomer()">Approve</button>
+        <button id="rejectButton" class="btn btn-danger" onclick="rejectCustomer()">Reject</button>
+    </div>
+</div>
+
+
+
 
         <div id="update-section" class="section">
             <h2 class="text-primary">Update Customer Information</h2>

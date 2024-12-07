@@ -137,6 +137,41 @@ router.get('/:customerID', async (req, res) => {
     }
 });
 
+router.put('/:customerID/approve', async (req, res) => {
+    try {
+        const customer = await Customer.findOne({ where: { customerID: req.params.customerID } });
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+        customer.approvalStatus = 'approved'; // Update the flag
+        await customer.save();
+        res.status(200).json({ message: 'Customer approved successfully.' });
+    } catch (error) {
+        console.error('Error approving customer:', error);
+        res.status(500).json({ message: 'Error approving customer', error });
+    }
+});
+
+router.put('/:customerID/reject', async (req, res) => {
+    try {
+        const customer = await Customer.findOne({ where: { customerID: req.params.customerID } });
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+        customer.approvalStatus = 'rejected'; // Update the flag
+        await customer.save();
+        res.status(200).json({ message: 'Customer rejected successfully.' });
+    } catch (error) {
+        console.error('Error rejecting customer:', error);
+        res.status(500).json({ message: 'Error rejecting customer', error });
+    }
+});
+
+
+
+
+
+
 // Update customer and related data
 router.put('/:customerID', async (req, res) => {
     const customerID = req.params.customerID;
