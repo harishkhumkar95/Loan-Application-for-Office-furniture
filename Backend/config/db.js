@@ -1,24 +1,24 @@
-const mysql = require('mysql2');
+const { Sequelize } = require('sequelize');
 
-// Initialize MySQL connection pool
-const db = mysql.createPool({
+// Initialize Sequelize connection
+const sequelize = new Sequelize('loan_system2', 'root', 'root', {
     host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'loan_system',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
+    dialect: 'mysql',
+    define: {
+        defaultPrimaryKey: false, // Prevent Sequelize from adding the default `id` column
+        timestamps: false, // Disable createdAt and updatedAt globally
+    },
+    logging: console.log // Enable query logging for debugging
 });
 
 // Test the database connection
-db.getConnection((err, connection) => {
-    if (err) {
+sequelize.authenticate()
+    .then(() => {
+        console.log('Connected to MySQL database.');
+    })
+    .catch(err => {
         console.error('Database connection failed:', err);
         process.exit(1); // Exit if connection fails
-    }
-    console.log('Connected to MySQL database.');
-    connection.release(); // Release the connection back to the pool
-});
+    });
 
-module.exports = db;
+module.exports = sequelize; // Export the Sequelize instance
