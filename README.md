@@ -84,3 +84,71 @@ node server.js
 ### Access API:
 
 Base URL: http://localhost:5000/api/customers.
+
+### Deployment Details
+
+1. Infrastructure Setup
+AWS EC2 Instance:
+
+Instance Type: t2.micro (Free Tier eligible).
+Operating System: Windows Server 2022.
+Security Group:
+HTTP (TCP 80): Open to 0.0.0.0/0.
+Custom TCP (5000): Open to 0.0.0.0/0 for backend API access.
+MySQL/Aurora (TCP 3306): Open to the required IP range.
+RDP (TCP 3389): Restricted to your local IP for remote access.
+Elastic IP attached for consistent public access.
+AWS RDS MySQL Database:
+
+Database Engine: MySQL 8.x (Free Tier eligible).
+Publicly accessible: Enabled.
+Endpoint: database-1.cneoesewi0ty.eu-west-1.rds.amazonaws.com:3306.
+Security Group: Configured to allow access from EC2 and local IP.
+
+
+2. Application Setup
+Backend:
+
+Built with Node.js and Express.
+Dependencies installed via npm install.
+Configured CORS to allow requests from any origin (origin: '*').
+Sequelize ORM used for database interactions.
+Frontend:
+
+Static files (HTML, CSS, JS) served via Express.
+Default route (/) set to serve login.html.
+Database:
+
+Tables and relationships were created and synchronized using Sequelize.
+CRUD operations implemented for customer-related data.
+
+3. Deployment Process
+Node.js Setup on Windows EC2:
+
+Installed Node.js and npm manually.
+Backend and frontend files uploaded to EC2 instance.
+Application started using node server.js.
+Application Access:
+
+API endpoints exposed on port 5000.
+Frontend accessible via the public IP: http://<EC2_PUBLIC_IP>:5000.
+
+4. Testing
+Verified:
+
+Data retrieval and submission via Postman.
+Frontend functionality, including customer details fetch and form submission.
+Database persistence with MySQL Workbench.
+Debugging Steps Taken:
+
+Adjusted security groups for connectivity issues.
+Fixed CORS and endpoint configurations.
+
+### How to Access the Deployed Application
+Frontend: http://<EC2_PUBLIC_IP>:5000
+API Endpoints:
+GET: /api/customers/:id
+POST: /api/customers
+PUT: /api/customers/:id
+DELETE: /api/customers/:id
+
