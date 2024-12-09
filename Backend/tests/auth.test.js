@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../server');
 
+// Added test case for auth.js to check invalid username & password
 describe("Auth API Negative Tests", () => {
     test("POST /api/auth/login - Should return 401 for invalid credentials", async () => {
       const invalidCredentials = {
