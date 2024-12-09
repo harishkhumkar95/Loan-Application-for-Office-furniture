@@ -1,8 +1,8 @@
 const { Sequelize } = require('sequelize');
 
 // Initialize Sequelize connection
-const sequelize = new Sequelize('loan_system2', 'admin', 'admin123', {
-    host: 'database-1.cneoesewi0ty.eu-west-1.rds.amazonaws.com',
+const sequelize = new Sequelize('loan_system2', 'root', 'root', {
+    host: 'localhost',
     dialect: 'mysql',
     define: {
         defaultPrimaryKey: false, // Prevent Sequelize from adding the default `id` column
