@@ -1,6 +1,6 @@
 const request = require("supertest");
 const app = require("../server");
-
+// check all negative test point for customerroutes.js 
 describe("Customer API Negative Tests", () => {
   test("GET /api/customers/:id - Should return 404 for non-existent customer", async () => {
     const response = await request(app).get("/api/customers/9999"); // Assuming 9999 does not exist
