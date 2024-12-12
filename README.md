@@ -1,20 +1,20 @@
-    ## Title
+### Title
     Loan Origination System - Office Furniture
 
     ## Project Description
     The Loan Origination System for Office Furniture simplifies and automates the loan application.
     I This system manages customer details, business information, and loan-related documentation with robust backend processing.
 
-
-    ## Features provided in application
+### Features provided in application
     - Loan application management with customer and business details.
     - Integration with document management for loan processing.
     - Database-driven system for structured data storage.
     - RESTful API for frontend-backend communication.
-    ## Installation
+### Installation
     - Node.js 
     -Express.js: Framework for routing and middleware.
     - Sequelize: ORM for managing database interactions.
+    - Jest : Library for implemetation of unit test cases
     - MySql Database
     - PostMan For API testing
     - Used VS code as code editer
@@ -28,8 +28,17 @@
     BusinessDetails.js: Stores business-related information.
     Document.js: Tracks uploaded documents.
     /Backend/config/db.js: Database connection setup.
+    /Backend/ Tests/ 
+    Auth.test.js : unit test case for authetication
+    Customer.test.js : unit test cases for CRUD api responses 
     /package.json: Project dependencies and scripts.
     /README.md: Documentation for the project.
+    /Frontend/index.html :file includes all frontend html code
+    /Frontned/style.css : provide styling and design code to the all html tag
+    /Frontend/script.js : include all method that connected with my backend api to allow dynamic change
+    /Frontend/login.html and logins.css : include login page htmla and css code
+    /Frontend/Registration.html and css : include registration page html and css code
+    
 
     ## EndPoint
     File: routes/customerRoutes.js
@@ -64,7 +73,7 @@
 - https://www.geeksforgeeks.org/how-to-resolve-a-cannot-find-module-error-using-node-js/
 
 ### Current Enhancements
-Added Add authentication and authorization features.
+Added authentication and authorization features.
 Implement logging and monitoring for API requests.
 Refactored the system to use Sequelize ORM for all database operations.
 Optimized data relationships and removed raw SQL queries for maintainability.
@@ -98,7 +107,7 @@ Custom TCP (5000): Open to 0.0.0.0/0 for backend API access.
 MySQL/Aurora (TCP 3306): Open to the required IP range.
 RDP (TCP 3389): Restricted to your local IP for remote access.
 Elastic IP attached for consistent public access.
-AWS RDS MySQL Database:
+### AWS RDS MySQL Database:
 
 Database Engine: MySQL 8.x (Free Tier eligible).
 Publicly accessible: Enabled.
@@ -131,21 +140,25 @@ Application started using node server.js.
 Application Access:
 
 API endpoints exposed on port 5000.
-Frontend accessible via the public IP: http://<EC2_PUBLIC_IP>:5000.
+Frontend accessible via the public IP: http://18.202.23.198:5000.
 
-4. Testing
-Verified:
-
+### Testing
+## Unit test case for negative scenario
+Test Cases Result shown on vs code console
+Test Suites: 2 passed, 2 total                                                                          
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        2.955 s, estimated 3 s
+Ran all test suites.
+PS D:\Loan Origination System - Office Furniture> 
+## Integration tets cases 
 Data retrieval and submission via Postman.
 Frontend functionality, including customer details fetch and form submission.
 Database persistence with MySQL Workbench.
-Debugging Steps Taken:
 
-Adjusted security groups for connectivity issues.
-Fixed CORS and endpoint configurations.
 
-### How to Access the Deployed Application
-Frontend: http://<EC2_PUBLIC_IP>:5000
+### How to Access the Deployed Application on AWS instance 
+## Application URL : http://18.202.23.198:5000
 API Endpoints:
 GET: /api/customers/:id
 POST: /api/customers
