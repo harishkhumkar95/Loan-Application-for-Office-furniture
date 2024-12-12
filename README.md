@@ -166,5 +166,22 @@ PUT: /api/customers/:id
 DELETE: /api/customers/:id
 Click on the URL :  http://18.202.23.198:5000
 Result
+We can see Login page
 ![Screenshot (148)](https://github.com/user-attachments/assets/88990653-c2f0-46d6-a116-be301b5869d6)
+Not register select registration page
+![Screenshot (149)](https://github.com/user-attachments/assets/a0cc30f5-dead-47bd-825b-50c9ceb1512e)
+After successfull login access the application 
+![Screenshot (150)](https://github.com/user-attachments/assets/daba19ea-e2f7-47d3-b7bd-e297a5c2a501)
+
+AWS resources working in the backend 
+Windows EC2 instance
+![Screenshot (152)](https://github.com/user-attachments/assets/ad0c6c1c-3032-49fb-b807-615894e80e9c)
+AWS mysql data
+![Screenshot (153)](https://github.com/user-attachments/assets/ead55be6-493a-4e8b-9f27-42919c6e7017)
+AWS database and active connection with workbench
+![Screenshot (151)](https://github.com/user-attachments/assets/3bc0ea25-f075-4a3a-a731-f80f62185c94)
+
+
+
+
 
