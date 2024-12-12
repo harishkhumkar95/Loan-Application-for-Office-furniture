@@ -164,4 +164,7 @@ GET: /api/customers/:id
 POST: /api/customers
 PUT: /api/customers/:id
 DELETE: /api/customers/:id
+Click on the URL :  http://18.202.23.198:5000
+Result
+![Screenshot (148)](https://github.com/user-attachments/assets/88990653-c2f0-46d6-a116-be301b5869d6)
 
