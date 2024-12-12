@@ -21,7 +21,7 @@
     - Install dependencies
     
 
-    ## File Structure
+## File Structure
     /Backend/server.js: Entry point for the backend server.
     /Backend/models: Data models for MongoDB collections.
     Customer.js: Handles customer data.
@@ -56,7 +56,7 @@
 - [MySQL Node.js Driver](https://www.npmjs.com/package/mysql) - Library used to connect and query the MySQL database.
 - [JWT Authentication in Node.js](https://www.digitalocean.com/community/tutorials/nodejs-jwt-expressjs) - Guide for implementing authentication using JWT.
 
-### Frontend Development (Optional)
+### Frontend Development
 - [HTML, CSS, and JavaScript Basics](https://developer.mozilla.org/en-US/docs/Web) - For web design and interactivity.
 - [Bootstrap Documentation](https://getbootstrap.com/) - For responsive UI components and layout.
 
